@@ -1,0 +1,91 @@
+.ORIG x3000
+TRAP 0x31
+
+; GETTING BLOCK BENEATH PLAYER
+TRAP 0x33
+ADD R1, R1, #-1
+
+; GETTING GROUND HEIGHT
+; TRAP 0x35
+; ADD R1, R1, #-1
+
+LD R3, GRASS_B
+
+LD R4, X_DIST
+LD R5, Z_DIST
+
+; TRAP 0x34
+; ADD R4, R4, #-1
+; ADD R5, R5, #-1
+
+; L
+; LD R3, GRASS_B
+; TRAP 0x34
+; ADD R2, R2, #1
+; ADD R4, R4, #-1
+; ADD R5, R5, #-1
+; BRp L
+
+; ADD R0, R0, #1
+OUT_L
+ADD R0, R0, #0
+ADD R2, R2, #1
+TRAP 0x34
+IN_L
+ADD R4, R4 , #-1
+ADD R0, R0, #1
+ADD R2, R2, #0
+TRAP 0x34
+ADD R4, R4 , #-1
+BRp IN_L
+AND R4, R4, #0
+LD R4, X_DIST
+ADD R0, R0, #-1
+ADD R5, R5, #-1
+BRp OUT_L
+
+
+; LD R3, GRASS_B
+; TRAP 0x34
+
+; TRAP 0x31
+
+; ; GETTING BLOCK BENEATH PLAYER
+; TRAP 0x33
+; ADD R1, R1, #-1
+; LD R3, GRASS_B
+
+; LD R4, X_DIST
+; LD R5, Z_DIST
+
+; ; TOWRDS -X, Z COORDINATES
+
+; ADD R0, R0, #-1
+
+
+
+; OUT_L
+; ADD R0, R0, #0
+; ADD R2, R2, #1
+; TRAP 0x34
+; IN_L
+; ADD R4, R4 , #-1
+; ADD R0, R0, #-1
+; ADD R2, R2, #0
+; TRAP 0x34
+; ADD R4, R4 , #-1
+; BRn IN_L
+; AND R4, R4, #0
+; LD R4, X_DIST
+; ADD R0, R0, #1
+; ADD R5, R5, #-1
+; BRp OUT_L
+
+
+
+HALT
+; Note: Please do not change the names of the constants below
+X_DIST .FILL #2
+Z_DIST .FILL #3
+GRASS_B .FILL #2
+.END

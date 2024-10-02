@@ -1,0 +1,32 @@
+.ORIG x3000
+
+LD R5, COUNT
+TRAP 0x31
+
+ADD R0, R0, #1
+ADD R1, R1, #-1
+
+LD R4, NUMBER_TO_CONVERT
+
+LOOP
+ADD R5, R4, R4
+BRz AIR
+
+LD R3, STONE_B
+TRAP 0x34
+
+AIR
+LD R3, AIR_B
+TRAP 0x34
+
+ADD R0, R0, #1
+ADD R5, R5, #-1
+BRp LOOP
+
+
+HALT
+AIR_B .FILL #0
+STONE_B .FILL #1
+COUNT .FILL	#16
+NUMBER_TO_CONVERT .FILL #21746 ; Note: Please do not change the name of this constant
+.END

@@ -1,0 +1,52 @@
+(a-i) Replace each '...' below with the binary representation.
+
+x5020 = 0101 0000 0010 0000
+x923F = 1001 0010 0011 1111
+x1261 = 0001 0010 0110 0001
+x1240 = 0001 0010 0100 0000
+x1240 = 0001 0010 0100 0000
+x103F = 0001 0000 0011 1111
+x03FC = 0000 0011 1111 1100
+
+
+(a-ii)
+.ORIG x3000
+
+AND R0, R0, #0  ;x5020
+ADD R0, R0, #7
+NOT R1, R0  ;x923F
+ADD R1, R1, #1  ;x1261
+ADD R1, R1, R0  ;x1240
+ADD R1, R1, R0  ;x1240
+ADD R0, R0, #-1  ;x103F
+BRp x0010  ;x03FC 
+
+HALT
+.END
+
+
+(b-i)
+Replacing (ADD R0, R0, #7) with (ADD R0, R0, #4), R1 will hold  the value 5.
+
+
+(b-ii)
+Replacing (ADD R0, R0, #7) with (ADD R0, R0, #9), R1 will hold  the value 10.
+
+
+(c)
+The mentioned LC-3 program performs some arithmetic addition and subtraction. 
+AND R0, R0, #0  ;x5020
+ADD R0, R0, #7
+These two lines are just clearing and storing value in R0 register.
+NOT R1, R0  ;x923F
+This is giving us negative value of R0 so that we can peform subtraction 
+and storing the result in R1.
+ADD R1, R1, #1  ;x1261
+ADD R1, R1, R0  ;x1240
+ADD R1, R1, R0  ;x1240
+ADD R0, R0, #-1  ;x103F
+These are just some arithmetic operations that are being performed on the value of R1 
+with the value of R0, 1 and then storing the result in R1.
+
+In breif, the above LC-3 program is just performing some arithmetic tasks 
+and storing the result in the registers.

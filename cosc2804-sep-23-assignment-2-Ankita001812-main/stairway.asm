@@ -1,0 +1,162 @@
+.ORIG x3000
+TRAP 0x31
+LD R3, BLOCK_ID
+LD R4, STAIRS_WIDTH
+LD R5, STAIRS_LENGTH
+
+
+; FIRST LAYER without loop /=>r7 = r2+r50
+; AND R7, R7, #0
+; ADD R7, R0, R4
+; NOT R7, R7
+; ADD R7, R7, #1
+
+; ; clearing r4 to use for result
+; AND R4, R4, #0
+
+; LOOP_X
+; ADD R0, R0, #1
+; TRAP 0x34
+; ADD R4, R0, R7
+; BRn LOOP_X
+
+
+; TRAP 0x31
+
+; ; FIRST LAYER without loop 
+; AND R7, R7, #0
+; ADD R7, R2, R5
+; NOT R7, R7
+; ADD R7, R7, #1
+
+; ; clearing r4 to use for result
+; AND R4, R4, #0
+
+
+; LOOP_Z
+; ADD R2, R2, #1
+; TRAP 0x34
+; ADD R4, R2, R7
+; BRn LOOP_Z
+
+AND R6, R6, #0
+AND R7, R7, #0
+
+; X+WIDTH
+; ADD R6, R0, R4
+; ; Z+LENGTH
+; ADD R7, R2, R5
+
+; ; NEGATIVE TO USE THEM AS COUNTER
+; NOT R6, R6
+; ADD R6, R6, #1
+
+; NOT R7, R7
+; ADD R7, R7, #1
+
+
+
+; AND R4, R4, #0
+; AND R5, R5, #0
+
+; outer X
+; FIRST LAYER DONEEEEEEE!!!!!!!!!
+ADD R0, R0, #1
+
+OUTER_L
+ADD R0, R0, #0
+ADD R2, R2, #1
+TRAP 0x34
+INNER_L
+ADD R4, R4, #-1
+ADD R0, R0, #1
+ADD R2, R2, #0
+TRAP 0x34
+ADD R4, R4, #-1
+BRp INNER_L
+AND R4, R4, #0
+LD R4, STAIRS_WIDTH
+ADD R0, R0, #-1
+ADD R5, R5, #-1
+BRp OUTER_L
+
+
+
+; ****SECOND LAYER****
+AND R3, R3, #0
+AND R4, R4, #0
+AND R5, R5, #0
+
+LD R3, BLOCK_ID
+LD R4, STAIRS_WIDTH
+LD R5, STAIRS_LENGTH
+ADD R5, R5, #-1
+
+TRAP 0x31
+ADD R0, R0, #1
+ADD R1, R1, #1
+ADD R2, R2, #1
+
+O_SEC
+ADD R0, R0, #0
+ADD R2, R2, #1
+TRAP 0x34
+I_SEC
+ADD R4, R4, #-1
+ADD R0, R0, #1
+ADD R2, R2, #0
+TRAP 0x34
+ADD R4, R4, #-1
+BRp I_SEC
+AND R4, R4, #0
+LD R4, STAIRS_WIDTH
+ADD R0, R0, #-1
+ADD R5, R5, #-1
+BRp O_SEC
+
+
+
+; ************** 3RD LAYER ***********
+
+AND R3, R3, #0
+AND R4, R4, #0
+AND R5, R5, #0
+
+LD R3, BLOCK_ID
+LD R4, STAIRS_WIDTH
+LD R5, STAIRS_LENGTH
+ADD R5, R5, #-2
+
+TRAP 0x31
+ADD R0, R0, #1
+ADD R1, R1, #2
+ADD R2, R2, #2
+
+O_THIR
+ADD R0, R0, #0
+ADD R2, R2, #1
+TRAP 0x34
+I_THIR
+ADD R4, R4, #-1
+ADD R0, R0, #1
+ADD R2, R2, #0
+TRAP 0x34
+ADD R4, R4, #-1
+BRp I_THIR
+AND R4, R4, #0
+LD R4, STAIRS_WIDTH
+ADD R0, R0, #-1
+ADD R5, R5, #-1
+BRp O_THIR
+
+
+; DID IT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+HALT
+; Note: Please do not change the names of the constants below
+STAIRS_WIDTH .FILL #2
+STAIRS_LENGTH .FILL #4
+STAIRS_HEIGHT .FILL #3
+BLOCK_ID .FILL #1
+.END

@@ -1,0 +1,165 @@
+.ORIG x3000
+
+TRAP 0x31
+
+LD R4, G_X
+LD R5, G_Y
+LD R6, G_Z
+LD R7, GOAL_DIST
+
+
+
+; X-X1
+NOT R4, R4
+ADD R4, R4, #1
+ADD R0, R0, R4
+BRzp P_X
+
+
+; IF  NEGATIVE
+NOT R0, R0
+ADD R0, R0, #1
+
+
+
+P_X
+ADD R0, R0, #0
+
+
+; Y-Y1
+NOT R5, R5
+ADD R5, R5, #1
+ADD R1, R1, R5
+BRzp P_Y
+
+
+; IF  NEGATIVE
+NOT R1, R1
+ADD R1, R1, #1
+
+
+P_Y
+ADD R1, R1, #0
+
+
+
+; Z-Z1
+NOT R6, R6
+ADD R6, R6, #1
+ADD R2, R2, R6
+BRzp P_Z
+
+
+; IF NEGATIVE
+NOT R2, R2
+ADD R2, R2, #1
+
+
+
+P_Z
+ADD R2, R2, #0
+
+
+
+AND R4, R4, #0
+AND R5, R5, #0
+AND R6, R6, #0
+
+
+;  x*x, R6 FOR RESULT, R4 COUNTER
+
+ADD R4, R4, R0
+
+
+LX
+ADD R6, R6, R0
+ADD R4, R4, #-1
+BRp LX
+
+; STROING RESULT
+ADD R5, R5, R6
+
+;  Y*Y, R6 FOR RESULT, R4 COUNTER
+
+
+AND R6, R6, #0
+AND R4, R4, #0
+
+ADD R4, R4, R1
+
+
+LY
+ADD R6, R6, R1
+ADD R4, R4, #-1
+BRp LY
+
+; STROING RESULT
+ADD R5, R5, R6
+
+
+;  Z*Z, R6 FOR RESULT, R4 COUNTER
+
+
+AND R6, R6, #0
+AND R4, R4, #0
+
+ADD R4, R4, R2
+
+
+LZ
+ADD R6, R6, R2
+ADD R4, R4, #-1
+BRp LZ
+
+; STROING RESULT, ULTIMATE RESULT IN R5
+ADD R5, R5, R6
+
+; CHECKING FOR GOAL
+
+;  , R6 FOR RESULT, R4 COUNTER
+AND R6, R6, #0
+AND R4, R4, #0
+
+
+ADD R4, R4, R7
+
+
+LGOAL
+ADD R6, R6, R7
+ADD R4, R4, #-1
+BRp LGOAL
+
+
+
+; R6 FOR GOAL2
+
+; R5-R6 = -WITHIN GOAL
+TRAP 0x36
+
+NOT R6, R6
+ADD R6, R6, #1
+ADD R3, R5, R6
+BRn WITHIN_G
+
+
+
+LEA R0, OUTSIDE_MSG
+TRAP 0x30
+TRAP 0x36
+HALT
+
+
+
+WITHIN_G
+LEA R0, WITHIN_MSG
+TRAP 0x30
+TRAP 0x36
+HALT
+; Note: Please do not change the names of the constants below
+G_X .FILL #7
+G_Y .FILL #-8
+G_Z .FILL #5
+GOAL_DIST .FILL #10
+WITHIN_MSG .STRINGZ	"The player is within distance of the goal"
+OUTSIDE_MSG .STRINGZ "The player is outside the goal bounds"
+.END
